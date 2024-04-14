@@ -12,17 +12,18 @@ import kea.grocery.services.ProductService;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductOrderService {
     private final ProductOrderRepository productOrderRepository;
-    private final ProductRepository productRepository;
+
     private final ProductService productService;
 
 
-    public ProductOrderService(ProductOrderRepository productOrderRepository, ProductRepository productRepository, VanRepository vanRepository, ProductService productService) {
+    public ProductOrderService(ProductOrderRepository productOrderRepository, ProductRepository productRepository,  ProductService productService) {
         this.productOrderRepository = productOrderRepository;
-        this.productRepository = productRepository;
+
         this.productService = productService;
     }
 
@@ -31,11 +32,10 @@ public class ProductOrderService {
         return productOrders;
     }
 
-    public ProductOrder getProductOrderById(int id) {
-        ProductOrder productOrder = productOrderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product Order not found"));
-        return productOrder;
-    }
+    public Optional<ProductOrder> getProductOrderById(Long id) {
+        return productOrderRepository.findById(id);
 
+    }
 
     public ProductOrder createProductOrder(Long productId, int quantity) {
         Product product = productService.getProductById(productId)
@@ -49,6 +49,24 @@ public class ProductOrderService {
         productOrder.setProduct(product);
         productOrder.setQuantity(quantity);
         return productOrderRepository.save(productOrder);
+    }
+
+    public ProductOrder editProductOrder(ProductOrder request, Long id) {
+        ProductOrder productOrderToEdit = productOrderRepository.findById(id).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Order not found"));
+        updateProductOrder(productOrderToEdit, request);
+        productOrderRepository.save(productOrderToEdit);
+        return productOrderToEdit;
+    }
+
+    private void updateProductOrder(ProductOrder original, ProductOrder request){
+        original.setQuantity(request.getQuantity());
+    }
+
+    public void deleteProductOrder(Long id) {
+        ProductOrder productOrder = productOrderRepository.findById(id).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Order not found"));
+        productOrderRepository.delete(productOrder);
     }
 
 

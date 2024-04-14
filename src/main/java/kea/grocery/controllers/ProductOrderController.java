@@ -39,4 +39,24 @@ public class ProductOrderController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductOrder> updateOrder(@RequestBody ProductOrder request, @PathVariable Long id) {
+        try {
+            ProductOrder productOrder = productOrderService.editProductOrder(request, id);
+            return ResponseEntity.ok(productOrder);
+        } catch (IllegalArgumentException | ResponseStatusException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteOrder(@PathVariable Long id) {
+        try {
+            productOrderService.deleteProductOrder(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException | ResponseStatusException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }

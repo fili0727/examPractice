@@ -1,14 +1,12 @@
 package kea.grocery.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,4 +20,16 @@ public class Delivery {
     private LocalDate deliveryDate;
     private String fromWarehouse; //Replace with actual warehouse entity
     private String toDestination;
+
+    @ManyToOne
+    private Van van;
+
+   @OneToMany
+    private List<ProductOrder> productOrders;
+
+    private double totalPrice;
+
+    private double totalWeightInGrams = 0.0;
+
+
 }
