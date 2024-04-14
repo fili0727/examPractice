@@ -37,6 +37,11 @@ public class ProductOrderService {
 
     }
 
+    public List<ProductOrder> getProductOrdersByIds(List<Long> ids) {
+        return productOrderRepository.findAllById(ids);
+    }
+
+
     public ProductOrder createProductOrder(Long productId, int quantity) {
         Product product = productService.getProductById(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));

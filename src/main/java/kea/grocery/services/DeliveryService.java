@@ -57,16 +57,30 @@ public class DeliveryService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Delivery not found"));
     }
 
-    public Delivery addProductOrderToDelivery(Long deliveryId, Long productOrderId) {
-        Delivery delivery = getDeliveryById(deliveryId);
-        ProductOrder productOrder = productOrderService.getProductOrderById(productOrderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Order not found"));
+//    public Delivery addProductOrderToDelivery(Long deliveryId, Long productOrderId) {
+//        Delivery delivery = getDeliveryById(deliveryId);
+//        ProductOrder productOrder = productOrderService.getProductOrderById(productOrderId)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Order not found"));
+//
+//        delivery.getProductOrders().add(productOrder);
+//        updateTotals(delivery);
+//        return deliveryRepository.save(delivery);
+//    }
 
-        delivery.getProductOrders().add(productOrder);
+    public Delivery addProductOrdersToDelivery(Long deliveryId, List<Long> productOrderIds) {
+        Delivery delivery = getDeliveryById(deliveryId);
+        List<ProductOrder> productOrdersToAdd = productOrderService.getProductOrdersByIds(productOrderIds);
+
+        for (ProductOrder productOrder : productOrdersToAdd) {
+            if (!delivery.getProductOrders().contains(productOrder)) {
+                delivery.getProductOrders().add(productOrder);
+            } else {
+                throw new IllegalStateException("Product order already added to this delivery");
+            }
+        }
         updateTotals(delivery);
         return deliveryRepository.save(delivery);
     }
-
 
 
 

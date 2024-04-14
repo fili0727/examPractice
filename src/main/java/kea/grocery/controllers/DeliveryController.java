@@ -42,15 +42,26 @@ public class DeliveryController {
     }
 
 
-    @PostMapping("/{deliveryId}/addProductOrder/{productOrderId}")
-    public ResponseEntity<Delivery> addProductOrderToDelivery(@PathVariable Long deliveryId, @PathVariable Long productOrderId) {
+//    @PostMapping("/{deliveryId}/addProductOrder/{productOrderId}")
+//    public ResponseEntity<Delivery> addProductOrderToDelivery(@PathVariable Long deliveryId, @PathVariable Long productOrderId) {
+//        try {
+//            Delivery updatedDelivery = deliveryService.addProductOrderToDelivery(deliveryId, productOrderId);
+//            return ResponseEntity.ok(updatedDelivery);
+//        } catch (ResponseStatusException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        }
+//    }
+
+    @PostMapping("/{deliveryId}/addProductOrders")
+    public ResponseEntity<Delivery> addProductOrdersToDelivery(@PathVariable Long deliveryId, @RequestBody List<Long> productOrderIds) {
         try {
-            Delivery updatedDelivery = deliveryService.addProductOrderToDelivery(deliveryId, productOrderId);
+            Delivery updatedDelivery = deliveryService.addProductOrdersToDelivery(deliveryId, productOrderIds);
             return ResponseEntity.ok(updatedDelivery);
-        } catch (ResponseStatusException e) {
+        } catch (IllegalStateException e)  {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 
     @GetMapping
     public ResponseEntity<List<Delivery>> getAllDeliveries() {
