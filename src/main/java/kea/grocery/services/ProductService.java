@@ -29,9 +29,8 @@ public class ProductService {
         return ProductRepository.findByName(name);
     }
 
-    public Product getProductById(int id) {
-        Product product = ProductRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found"));
-        return product;
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findById(id);
     }
 
 
@@ -47,9 +46,9 @@ public class ProductService {
 
     }
 
-    public Product editProduct(Product request, int id) {
+    public Product editProduct(Product request, Long id) {
         Product productToEdit = productRepository.findById(id).orElseThrow(()
-                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         updateProduct(productToEdit, request);
         productRepository.save(productToEdit);
         return productToEdit;
@@ -61,7 +60,7 @@ public class ProductService {
         original.setWeightInGrams(request.getWeightInGrams());
     }
 
-    public ResponseEntity deleteProduct(int id){
+    public ResponseEntity deleteProduct(Long id){
         Product productToDelete = ProductRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found"));
         ProductRepository.delete(productToDelete);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
