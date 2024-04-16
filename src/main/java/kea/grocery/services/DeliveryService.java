@@ -1,5 +1,6 @@
 package kea.grocery.services;
 
+import jakarta.transaction.Transactional;
 import kea.grocery.dto.DeliveryDTO;
 import kea.grocery.entities.Delivery;
 import kea.grocery.entities.ProductOrder;
@@ -26,6 +27,9 @@ public class DeliveryService {
     }
 
 
+    public List<Delivery> getDeliveriesByVan(Long vanId) {
+        return deliveryRepository.findAllByVanId(vanId);
+    }
 
     public Delivery createDelivery(DeliveryDTO deliveryDTO) {
         Delivery delivery = new Delivery();
@@ -39,8 +43,6 @@ public class DeliveryService {
             delivery.setVan(van);
         }
 
-        delivery.setTotalWeightInGrams(0);
-        delivery.setTotalPrice(0);
 
         return deliveryRepository.save(delivery);
     }
@@ -57,15 +59,8 @@ public class DeliveryService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Delivery not found"));
     }
 
-//    public Delivery addProductOrderToDelivery(Long deliveryId, Long productOrderId) {
-//        Delivery delivery = getDeliveryById(deliveryId);
-//        ProductOrder productOrder = productOrderService.getProductOrderById(productOrderId)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Order not found"));
-//
-//        delivery.getProductOrders().add(productOrder);
-//        updateTotals(delivery);
-//        return deliveryRepository.save(delivery);
-//    }
+
+
 
     public Delivery addProductOrdersToDelivery(Long deliveryId, List<Long> productOrderIds) {
         Delivery delivery = getDeliveryById(deliveryId);
@@ -78,27 +73,16 @@ public class DeliveryService {
                 throw new IllegalStateException("Product order already added to this delivery");
             }
         }
-        updateTotals(delivery);
+        delivery.getTotalWeightInKg();
         return deliveryRepository.save(delivery);
     }
 
 
 
-    private void updateTotals(Delivery delivery) {
-        double totalWeightInGrams = 0;
-        double totalPrice = 0;
 
-        for (ProductOrder order : delivery.getProductOrders()) {
-            totalWeightInGrams += order.getQuantity() * order.getProduct().getWeightInGrams();
-            totalPrice += order.getQuantity() * order.getProduct().getPrice();
-        }
-
-        delivery.setTotalWeightInGrams(totalWeightInGrams);
-        delivery.setTotalPrice(totalPrice);
-    }
 
     public Delivery updateDelivery(Delivery delivery) {
-        updateTotals(delivery);
+        delivery.getTotalWeightInKg();
         return deliveryRepository.save(delivery);
     }
 

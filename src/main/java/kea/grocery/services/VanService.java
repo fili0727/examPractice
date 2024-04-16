@@ -1,5 +1,6 @@
 package kea.grocery.services;
 
+import kea.grocery.entities.Delivery;
 import kea.grocery.entities.Van;
 import kea.grocery.reposities.VanRepository;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,22 @@ public class VanService {
             return vanRepository.findById(id);
         }
 
+        public boolean addDeliveryToVan (Delivery delivery, Long vanId){
+          Van van = vanRepository.findById(vanId).orElseThrow();
+          return addDeliveryToVan(delivery, van);
+        }
 
+        public boolean addDeliveryToVan(Delivery delivery, Van van) {
+
+        if(van.getCombinedWeightOfDeliveriesInKg() + delivery.getTotalWeightInKg() < van.getCapacityInKg()) {
+            van.getDeliveries().add(delivery);
+        } else{
+            return false;
+        }
+
+
+            vanRepository.save(van);
+        return true;
+        }
 }
 

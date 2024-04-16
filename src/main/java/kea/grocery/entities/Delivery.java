@@ -27,9 +27,13 @@ public class Delivery {
    @OneToMany
     private List<ProductOrder> productOrders;
 
-    private double totalPrice;
 
-    private double totalWeightInGrams = 0.0;
-
+    public int getTotalWeightInKg(){
+        int totalWeight = 0;
+        for (ProductOrder productOrder : productOrders) {
+            totalWeight += productOrder.getTotalWeightInGrams();
+        }
+        return (int)Math.ceil((double) totalWeight / 1000);
+    }
 
 }

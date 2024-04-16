@@ -52,6 +52,13 @@ public class DeliveryController {
 //        }
 //    }
 
+
+    @GetMapping("/van/{vanId}")
+    public ResponseEntity<List<Delivery>> getDeliveriesByVan(@PathVariable Long vanId) {
+        List<Delivery> deliveries = deliveryService.getDeliveriesByVan(vanId);
+        return ResponseEntity.ok(deliveries);
+    }
+
     @PostMapping("/{deliveryId}/addProductOrders")
     public ResponseEntity<Delivery> addProductOrdersToDelivery(@PathVariable Long deliveryId, @RequestBody List<Long> productOrderIds) {
         try {

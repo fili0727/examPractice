@@ -18,4 +18,10 @@ public class ProductOrder {
     private Product product;
 
     private int quantity;
+
+
+    public int getTotalWeightInGrams() {
+        return product.getWeightInGrams() * quantity;
+
+    }
 }

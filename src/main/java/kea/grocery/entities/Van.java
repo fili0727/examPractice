@@ -1,12 +1,11 @@
 package kea.grocery.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Setter
@@ -21,6 +20,19 @@ public class Van {
     private String model;
     private int capacityInKg;
 
+    @OneToMany
+    private List<Delivery> deliveries;
 
 
+    public int getCombinedWeightOfDeliveriesInKg(){
+        int totalWeightOfDeliveries = 0;
+        for (Delivery delivery : deliveries) {
+            totalWeightOfDeliveries += delivery.getTotalWeightInKg();
+        }
+        return totalWeightOfDeliveries;
+    }
+
+    public boolean canAddDelivery(Delivery delivery){
+        return getCombinedWeightOfDeliveriesInKg() + delivery.getTotalWeightInKg() < capacityInKg;
+    }
 }
