@@ -1,7 +1,9 @@
 package kea.grocery.services;
 
 import kea.grocery.entities.Product;
+import kea.grocery.entities.ProductOrder;
 import kea.grocery.reposities.ProductRepository;
+import kea.grocery.services.ProductOrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,11 @@ public class ProductService {
     private final ProductRepository ProductRepository;
     private final ProductRepository productRepository;
 
+
     public ProductService(ProductRepository ProductRepository, ProductRepository productRepository){
         this.ProductRepository = ProductRepository;
         this.productRepository = productRepository;
+
     }
 
     public List<Product> getAllProducts(){
@@ -60,11 +64,14 @@ public class ProductService {
         original.setWeightInGrams(request.getWeightInGrams());
     }
 
-    public ResponseEntity deleteProduct(Long id){
-        Product productToDelete = ProductRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found"));
-        ProductRepository.delete(productToDelete);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+//    public ResponseEntity deleteProduct(Long id){
+//        Product productToDelete = ProductRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+//        ProductRepository.delete(productToDelete);
+//        return new ResponseEntity(HttpStatus.NO_CONTENT);
+//
+//    }
 
-    }
 
 }
+
+
