@@ -33,15 +33,12 @@ public class ProductService {
         return ProductRepository.findByName(name);
     }
 
-    public Optional<Product> getProductById(Long id) {
+    public Optional<Product> getProductById(int id) {
         return productRepository.findById(id);
     }
 
 
     public Product addProduct(Product request){
-        if(request.getId()!= null){
-            throw new IllegalArgumentException("You cannot provide the id for a new product");
-        }
 
         Product newProduct = new Product();
         updateProduct(newProduct, request);
@@ -50,7 +47,7 @@ public class ProductService {
 
     }
 
-    public Product editProduct(Product request, Long id) {
+    public Product editProduct(Product request, int id) {
         Product productToEdit = productRepository.findById(id).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
         updateProduct(productToEdit, request);

@@ -40,7 +40,7 @@ public class ProductOrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductOrder> updateOrder(@RequestBody ProductOrder request, @PathVariable Long id) {
+    public ResponseEntity<ProductOrder> updateOrder(@RequestBody ProductOrder request, @PathVariable int id) {
         try {
             ProductOrder productOrder = productOrderService.editProductOrder(request, id);
             return ResponseEntity.ok(productOrder);
@@ -50,7 +50,7 @@ public class ProductOrderController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteOrder(@PathVariable Long id) {
+    public ResponseEntity deleteOrder(@PathVariable int id) {
         try {
             productOrderService.deleteProductOrder(id);
             return ResponseEntity.ok().build();

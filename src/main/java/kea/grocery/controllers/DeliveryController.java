@@ -60,7 +60,7 @@ public class DeliveryController {
     }
 
     @PostMapping("/{deliveryId}/addProductOrders")
-    public ResponseEntity<Delivery> addProductOrdersToDelivery(@PathVariable Long deliveryId, @RequestBody List<Long> productOrderIds) {
+    public ResponseEntity<Delivery> addProductOrdersToDelivery(@PathVariable Long deliveryId, @RequestBody List<Integer> productOrderIds) {
         try {
             Delivery updatedDelivery = deliveryService.addProductOrdersToDelivery(deliveryId, productOrderIds);
             return ResponseEntity.ok(updatedDelivery);

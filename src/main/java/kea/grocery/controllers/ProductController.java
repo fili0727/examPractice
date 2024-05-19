@@ -31,7 +31,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Product> getProductById(@PathVariable Long id) {
+    public Optional<Product> getProductById(@PathVariable int id) {
         return productService.getProductById(id);
     }
 
@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public Product editProduct(@RequestBody Product request, @PathVariable Long id) {
+    public Product editProduct(@RequestBody Product request, @PathVariable int id) {
         return productService.editProduct(request,id);
     }
 //
@@ -57,7 +57,7 @@ public class ProductController {
 //    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteProduct(@PathVariable Long id) {
+    public ResponseEntity deleteProduct(@PathVariable int id) {
         try {
             return productOrderService.deleteProduct(id);
         } catch (IllegalStateException e) {

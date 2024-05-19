@@ -62,7 +62,7 @@ public class DeliveryService {
 
 
 
-    public Delivery addProductOrdersToDelivery(Long deliveryId, List<Long> productOrderIds) {
+    public Delivery addProductOrdersToDelivery(Long deliveryId, List<Integer> productOrderIds) {
         Delivery delivery = getDeliveryById(deliveryId);
         List<ProductOrder> productOrdersToAdd = productOrderService.getProductOrdersByIds(productOrderIds);
 

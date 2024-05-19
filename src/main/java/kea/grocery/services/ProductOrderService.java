@@ -2,19 +2,15 @@ package kea.grocery.services;
 
 import kea.grocery.entities.Product;
 import kea.grocery.entities.ProductOrder;
-import kea.grocery.entities.Van;
 import kea.grocery.reposities.ProductOrderRepository;
 import kea.grocery.reposities.ProductRepository;
-import kea.grocery.reposities.VanRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import kea.grocery.services.ProductService;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductOrderService {
@@ -34,25 +30,17 @@ public class ProductOrderService {
         return productOrders;
     }
 
-    public Optional<ProductOrder> getProductOrderById(Long id) {
+    public Optional<ProductOrder> getProductOrderById(int id) {
         return productOrderRepository.findById(id);
 
     }
 
-    public List<ProductOrder> getProductOrdersByProductId(Long productId) {
-        List<ProductOrder> allOrders = productOrderRepository.findAll();
-        return allOrders.stream()
-                .filter(order -> order.getProduct().getId().equals(productId))
-                .collect(Collectors.toList());
-    }
-
-
-    public List<ProductOrder> getProductOrdersByIds(List<Long> ids) {
+    public List<ProductOrder> getProductOrdersByIds(List<Integer> ids) {
         return productOrderRepository.findAllById(ids);
     }
 
 
-    public ProductOrder createProductOrder(Long productId, int quantity) {
+    public ProductOrder createProductOrder(int productId, int quantity) {
         Product product = productService.getProductById(productId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
@@ -66,7 +54,7 @@ public class ProductOrderService {
         return productOrderRepository.save(productOrder);
     }
 
-    public ProductOrder editProductOrder(ProductOrder request, Long id) {
+    public ProductOrder editProductOrder(ProductOrder request, int id) {
         ProductOrder productOrderToEdit = productOrderRepository.findById(id).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Order not found"));
         updateProductOrder(productOrderToEdit, request);
@@ -78,16 +66,16 @@ public class ProductOrderService {
         original.setQuantity(request.getQuantity());
     }
 
-    public void deleteProductOrder(Long id) {
+    public void deleteProductOrder(int id) {
         ProductOrder productOrder = productOrderRepository.findById(id).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Order not found"));
         productOrderRepository.delete(productOrder);
     }
 
-    public ResponseEntity deleteProduct(Long id) {
+    public ResponseEntity deleteProduct(int id) {
         Optional<Product> product = productService.getProductById(id);
         if (product.isPresent()) {
-            List<ProductOrder> orders = getProductOrdersByProductId(id);
+            List<ProductOrder> orders = ProductRepository.getProductOrdersByProductId(id);
             if (!orders.isEmpty()) {
                 throw new IllegalStateException("Product is part of an order and cannot be deleted");
             }
@@ -97,9 +85,6 @@ public class ProductOrderService {
             return ResponseEntity.notFound().build();
         }
     }
-
-
-
 
 
 
